@@ -6,7 +6,7 @@ public class Prueba {
 
 	public static void main(String[] args) {
 		int anio = 2028;
-		String saludo = "Hola PV";
+		String saludo = "Hola Programacion Visual";
 		System.out.println(saludo + " " + anio);
 
 		if (anio <= 2024) {
