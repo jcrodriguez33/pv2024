@@ -1,37 +1,25 @@
 package ar.edu.unju.pv.ejemplo1;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class Prueba {
 
 	public static void main(String[] args) {
-		int anio = 2028;
-		String saludo = "Hola Programacion Visual";
-		System.out.println(saludo + " " + anio);
-
-		if (anio <= 2024) {
-			System.out.println("Año correcto");
-		} else {
-			System.out.println("El Año es incorrecto");
-		}
-
-		int tamanio = saludo.length();
-		for (int i = 0; i < tamanio; i++) {
-			System.out.println(saludo.charAt(i));
-		}
-
-		int indice = 0;
-		while (indice < tamanio) {
-			System.out.println(saludo.charAt(indice));
-			indice++;
-
-		}
-
+		DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");		
 		Scanner teclado = new Scanner(System.in);
-		System.out.println("Ingrese un nombre:");
-		String nombre = teclado.next();
-		System.out.println("Hola " + nombre);
-
+		System.out.println("Ingrese una fecha (dd/MM/yyyy):");
+		String fechaString = teclado.next();
+		try {
+			LocalDate fecha = LocalDate.parse(fechaString, formatoFecha);			
+			System.out.println("La fecha en localdate es  " + fecha);	
+		} catch (DateTimeParseException e) {
+			System.out.println("El formato de la fecha ingresada es incorrecta");
+		}
+			
+			System.out.println("FIN");
 	}
 
 }
