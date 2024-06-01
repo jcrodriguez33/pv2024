@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+	<header th:fragment="header">
+		<nav class="navbar navbar-expand-lg bg-light">
+			<div class="container-fluid">
+				<a class="navbar-brand" th:href="@{/pacientes/}"><img th:src="@{../img/logoUnju.png}" alt="" width="70" height="30"></a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+					aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+						<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								PACIENTES</a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" th:href="@{/pacientes/}">Listado</a></li>
+								<li><a class="dropdown-item" th:href="@{/pacientes/nuevo}">Agregar</a></li>
+								<li><hr class="dropdown-divider"></li>
+								<li><a class="dropdown-item" href="">Accion 3</a></li>
+							</ul></li>
+						<li class="nav-item"><a class="nav-link disabled">Accion 2</a></li>
+					</ul>
+					<ul class="navbar-nav ml-auto justify-content-end">
+						<li class="nav-item"><a class="nav-link" href="#">Accion 3</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+</body>
+</html>

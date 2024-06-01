@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximun-scale=1, user-scalable=no">
+	<title>Ejemplo Bootstrap/Thymeleaft</title>
+	<link data-th-href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+	<div th:insert="~{/layouts/header :: header}"></div>
+	<div class="container mt-2">
+		<div class="row justify-content-center">
+			<div class="col-md-6">
+				<h2>Registro Paciente</h2>
+				<form id="pacienteForm" th:action="@{/pacientes/guardar}" th:object="${paciente}" method="post">
+					<div class="mb-3">
+						<label for="numeroDocumento"> NumeroDocumento </label> <input type="number" class="form-control"
+							id="numeroDocumento" th:field="*{numeroDocumento}" />
+					</div>
+					<div class="mb-3">
+						<label for="nombre"> Nombre </label> <input type="text" class="form-control" id="nombre"
+							th:field="*{nombre}" />
+					</div>
+					<div class="mb-3">
+						<label for="fechaNacimiento"> Fecha Nac. </label> <input type="date" class="form-control"
+							id="fechaNacimiento" th:field="*{fechaNacimiento}" />
+					</div>
+					<div class="mb-3">
+						<label for="obraSocial"> Obra Social</label>
+						<select id="obraSocial" class="form-control" th:field="*{obraSocial.id}">
+							<option th:each="obraSocial : ${obrasSociales}" th:text="${obraSocial.nombre}"
+								th:value="${obraSocial.id}" />
+						</select>
+					</div>
+					<button type="submit" class="btn btn-primary">Guardar</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" data-th-src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+</body>
+
+</html>

@@ -1,5 +1,8 @@
 package ar.edu.unju.pv2024.model;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class ObraSocial {
 	private Integer id;
 	private String nombre;

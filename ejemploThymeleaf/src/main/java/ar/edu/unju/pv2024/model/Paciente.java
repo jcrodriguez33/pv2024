@@ -2,13 +2,17 @@ package ar.edu.unju.pv2024.model;
 
 import java.time.LocalDate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Paciente {
 	private Integer numeroDocumento;
 	private String nombre;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fechaNacimiento;
+	@Autowired
 	private ObraSocial obraSocial;
 
 	public Paciente(Integer numeroDocumento, String nombre, LocalDate fechaNacimiento, ObraSocial obraSocial) {

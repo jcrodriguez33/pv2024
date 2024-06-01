@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximun-scale=1, user-scalable=no">
+	<title>Ejemplo Bootstrap/Thymeleaft</title>
+	<link data-th-href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+	<div th:insert="~{/layouts/header :: header}"></div>
+	<div class="container">
+		<div class="row">
+			<!-- CARDS -->
+			<div th:each="paciente:${pacientes}" class="col-3">
+				<div class="card" style="width: 18rem;">
+					<div class="card-body">
+						<h5 th:text="${paciente.nombre}" class="card-title"></h5>
+						<p th:text="${'DNI: ' + paciente.numeroDocumento}" class="card-text"></p>
+						<p th:text="${paciente.obraSocial.nombre}" class="card-text"></p>
+						<p th:text="${paciente.fechaNacimiento}" class="card-text"></p>
+						<a th:href="@{/pacientes/editar?numeroDocumento={numeroDocumento}(numeroDocumento=${paciente.numeroDocumento})}" class="btn btn-primary">Editar</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" data-th-src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+</body>
+
+</html>
