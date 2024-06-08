@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ar.edu.unju.pv2024.model.ObraSocial;
 import ar.edu.unju.pv2024.model.Paciente;
@@ -41,18 +42,24 @@ public class PacienteController {
 	}
 
 	@PostMapping("/guardar")
-	public ModelAndView pacienteGuardar(@ModelAttribute("paciente") Paciente paciente) {
+	public String pacienteGuardar(@ModelAttribute("paciente") Paciente paciente, RedirectAttributes redirectAttributes, Model model) {
 		// FIXME - Desde el formulario html del paciente solo se carga el id de la Obra
 		// Social seleccionada por
 		// tanto hay que buscar en el servicio la obras social con ese id y despues
 		// asignarla al paciente.
-		ObraSocial obraSocial = pacienteService.getObraSocialBy(paciente.getObraSocial().getId());
-		paciente.setObraSocial(obraSocial);
-		pacienteService.guardar(paciente);
-		List<Paciente> pacientes = pacienteService.getPacientes();
-		ModelAndView model = new ModelAndView("pacienteList");
-		model.addObject("pacientes", pacientes);
-		return model;
+		if (pacienteService.existe(paciente)) {
+			List<ObraSocial> obrasSociales = pacienteService.getObrasSociales();
+			model.addAttribute("paciente", paciente);
+			model.addAttribute("obrasSociales", obrasSociales);
+			model.addAttribute("error", "Numero de Documento Existente");
+			return "pacienteForm";
+		} else {
+			ObraSocial obraSocial = pacienteService.getObraSocialBy(paciente.getObraSocial().getId());
+			paciente.setObraSocial(obraSocial);
+			pacienteService.guardar(paciente);
+			redirectAttributes.addFlashAttribute("success", "Los Datos se Registraron Correctamente");
+			return "redirect:/pacientes/";	
+		}		
 	}
 
 	@GetMapping("/editar")

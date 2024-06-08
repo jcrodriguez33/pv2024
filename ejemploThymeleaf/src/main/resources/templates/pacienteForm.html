@@ -13,16 +13,17 @@
 	<div th:insert="~{/layouts/header :: header}"></div>
 	<div class="container mt-2">
 		<div class="row justify-content-center">
+			<div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div> 
 			<div class="col-md-6">
 				<h2>Registro Paciente</h2>
 				<form id="pacienteForm" th:action="@{/pacientes/guardar}" th:object="${paciente}" method="post">
 					<div class="mb-3">
 						<label for="numeroDocumento"> NumeroDocumento </label> <input type="number" class="form-control"
-							id="numeroDocumento" th:field="*{numeroDocumento}" />
+							id="numeroDocumento" th:field="*{numeroDocumento}"  required max="100000"/>
 					</div>
 					<div class="mb-3">
 						<label for="nombre"> Nombre </label> <input type="text" class="form-control" id="nombre"
-							th:field="*{nombre}" />
+							th:field="*{nombre}" required/>
 					</div>
 					<div class="mb-3">
 						<label for="fechaNacimiento"> Fecha Nac. </label> <input type="date" class="form-control"

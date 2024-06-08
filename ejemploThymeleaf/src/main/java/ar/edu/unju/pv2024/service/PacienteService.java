@@ -44,13 +44,14 @@ public class PacienteService {
 	}
 
 	public void guardar(Paciente paciente) {
-		Integer indice = getIndexFor(paciente);
-		if (indice != null) {
-			pacientes.set(indice, paciente);
-		} else {
-			pacientes.add(paciente);
-		}
+		pacientes.add(paciente);
 		
+//		Integer indice = getIndexFor(paciente);
+//		if (indice != null) {
+//			pacientes.set(indice, paciente);
+//		} else {
+//			pacientes.add(paciente);
+//		}		
 	}
 
 	public ObraSocial getObraSocialBy(Integer id) {
@@ -69,5 +70,14 @@ public class PacienteService {
 			}
 		}
 		return null;
+	}
+
+	public boolean existe(Paciente pacienteBuscar) {
+		for(Paciente paciente : pacientes){
+			if (paciente.getNumeroDocumento().equals(pacienteBuscar.getNumeroDocumento())) {
+				return true;
+			}
+		}
+	    return false;
 	}
 }
