@@ -19,7 +19,7 @@
 				<form id="pacienteForm" th:action="@{/pacientes/guardar}" th:object="${paciente}" method="post">
 					<div class="mb-3">
 						<label for="numeroDocumento"> NumeroDocumento </label> <input type="number" class="form-control"
-							id="numeroDocumento" th:field="*{numeroDocumento}"  required max="100000"/>
+							id="numeroDocumento" th:field="*{numeroDocumento}"  required max="100000"/><br>
 					</div>
 					<div class="mb-3">
 						<label for="nombre"> Nombre </label> <input type="text" class="form-control" id="nombre"
@@ -31,7 +31,7 @@
 					</div>
 					<div class="mb-3">
 						<label for="obraSocial"> Obra Social</label>
-						<select id="obraSocial" class="form-control" th:field="*{obraSocial.id}">
+						<select id="obraSocial" class="form-control" th:field="*{idObraSocial}">
 							<option th:each="obraSocial : ${obrasSociales}" th:text="${obraSocial.nombre}"
 								th:value="${obraSocial.id}" />
 						</select>

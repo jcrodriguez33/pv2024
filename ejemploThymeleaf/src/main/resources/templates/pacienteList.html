@@ -20,7 +20,7 @@
 					<div class="card-body">
 						<h5 th:text="${paciente.nombre}" class="card-title"></h5>
 						<p th:text="${'DNI: ' + paciente.numeroDocumento}" class="card-text"></p>
-						<p th:text="${paciente.obraSocial.nombre}" class="card-text"></p>
+						<p th:text="${paciente.obraSocial}" class="card-text"></p>
 						<p th:text="${paciente.fechaNacimiento}" class="card-text"></p>
 						<a th:href="@{/pacientes/editar?numeroDocumento={numeroDocumento}(numeroDocumento=${paciente.numeroDocumento})}" class="btn btn-primary">Editar</a>
 					</div>

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import ar.edu.unju.pv2024.model.ObraSocial;
-import ar.edu.unju.pv2024.model.Paciente;
+import ar.edu.unju.pv2024.dto.ObraSocialDto;
+import ar.edu.unju.pv2024.dto.PacienteDto;
 import ar.edu.unju.pv2024.service.PacienteService;
 
 @Controller
@@ -26,15 +26,15 @@ public class PacienteController {
 
 	@GetMapping("/")
 	public String pacienteList(Model model) {
-		List<Paciente> pacientes = pacienteService.getPacientes();
+		List<PacienteDto> pacientes = pacienteService.getPacientes();
 		model.addAttribute("pacientes", pacientes);
 		return "pacienteList";
 	}
 
 	@GetMapping("/nuevo")
 	public ModelAndView pacienteNuevo() {
-		Paciente paciente = new Paciente();
-		List<ObraSocial> obrasSociales = pacienteService.getObrasSociales();
+		PacienteDto paciente = new PacienteDto();
+		List<ObraSocialDto> obrasSociales = pacienteService.getObrasSociales();
 		ModelAndView model = new ModelAndView("pacienteForm");
 		model.addObject("paciente", paciente);
 		model.addObject("obrasSociales", obrasSociales);
@@ -42,21 +42,16 @@ public class PacienteController {
 	}
 
 	@PostMapping("/guardar")
-	public String pacienteGuardar(@ModelAttribute("paciente") Paciente paciente, RedirectAttributes redirectAttributes, Model model) {
-		// FIXME - Desde el formulario html del paciente solo se carga el id de la Obra
-		// Social seleccionada por
-		// tanto hay que buscar en el servicio la obras social con ese id y despues
-		// asignarla al paciente.
-		if (pacienteService.existe(paciente)) {
-			List<ObraSocial> obrasSociales = pacienteService.getObrasSociales();
-			model.addAttribute("paciente", paciente);
+	public String pacienteGuardar(@ModelAttribute("paciente") PacienteDto pacienteDto, RedirectAttributes redirectAttributes, Model model) {
+		if (pacienteService.existe(pacienteDto)) {
+			List<ObraSocialDto> obrasSociales = pacienteService.getObrasSociales();
+			model.addAttribute("paciente", pacienteDto);
 			model.addAttribute("obrasSociales", obrasSociales);
 			model.addAttribute("error", "Numero de Documento Existente");
 			return "pacienteForm";
 		} else {
-			ObraSocial obraSocial = pacienteService.getObraSocialBy(paciente.getObraSocial().getId());
-			paciente.setObraSocial(obraSocial);
-			pacienteService.guardar(paciente);
+			System.out.println(pacienteDto.getFechaNacimiento());
+			pacienteService.guardar(pacienteDto);
 			redirectAttributes.addFlashAttribute("success", "Los Datos se Registraron Correctamente");
 			return "redirect:/pacientes/";	
 		}		
@@ -65,10 +60,10 @@ public class PacienteController {
 	@GetMapping("/editar")
 	public ModelAndView pacienteView(@RequestParam(name = "numeroDocumento") Integer numeroDocumento) {
 		ModelAndView modelAndView = new ModelAndView("pacienteForm");
-		List<Paciente> pacientes = pacienteService.getPacientes();
-		Optional<Paciente> paciente = pacientes.stream()
+		List<PacienteDto> pacientes = pacienteService.getPacientes();
+		Optional<PacienteDto> paciente = pacientes.stream()
 				.filter(paciente1 -> paciente1.getNumeroDocumento().equals(numeroDocumento)).findFirst();
-		List<ObraSocial> obrasSociales = pacienteService.getObrasSociales();
+		List<ObraSocialDto> obrasSociales = pacienteService.getObrasSociales();
 		modelAndView.addObject("obrasSociales", obrasSociales);
 		modelAndView.addObject("paciente", paciente.get());
 		return modelAndView;
