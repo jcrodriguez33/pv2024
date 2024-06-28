@@ -38,11 +38,13 @@ public class PacienteController {
 		ModelAndView model = new ModelAndView("pacienteForm");
 		model.addObject("paciente", paciente);
 		model.addObject("obrasSociales", obrasSociales);
+		model.addObject("edicion", false);
 		return model;
 	}
 
 	@PostMapping("/guardar")
-	public String pacienteGuardar(@ModelAttribute("paciente") PacienteDto pacienteDto, RedirectAttributes redirectAttributes, Model model) {
+	public String pacienteGuardar(@ModelAttribute("paciente") PacienteDto pacienteDto,
+			RedirectAttributes redirectAttributes, Model model) {
 		if (pacienteService.existe(pacienteDto)) {
 			List<ObraSocialDto> obrasSociales = pacienteService.getObrasSociales();
 			model.addAttribute("paciente", pacienteDto);
@@ -53,8 +55,17 @@ public class PacienteController {
 			System.out.println(pacienteDto.getFechaNacimiento());
 			pacienteService.guardar(pacienteDto);
 			redirectAttributes.addFlashAttribute("success", "Los Datos se Registraron Correctamente");
-			return "redirect:/pacientes/";	
-		}		
+			return "redirect:/pacientes/";
+		}
+	}
+
+	@PostMapping("/modificar")
+	public String pacienteModificar(@ModelAttribute("paciente") PacienteDto pacienteDto, RedirectAttributes redirectAttributes, Model model) {
+		System.out.println(pacienteDto.getFechaNacimiento());
+		pacienteService.guardar(pacienteDto);
+		redirectAttributes.addFlashAttribute("success", "Los Datos se Registraron Correctamente");
+		return "redirect:/pacientes/";
+
 	}
 
 	@GetMapping("/editar")
@@ -66,6 +77,7 @@ public class PacienteController {
 		List<ObraSocialDto> obrasSociales = pacienteService.getObrasSociales();
 		modelAndView.addObject("obrasSociales", obrasSociales);
 		modelAndView.addObject("paciente", paciente.get());
+		modelAndView.addObject("edicion", true);
 		return modelAndView;
 	}
 

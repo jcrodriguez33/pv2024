@@ -7,48 +7,35 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ar.edu.unju.pv2024.dto.ObraSocialDto;
 import ar.edu.unju.pv2024.dto.PacienteDto;
 import ar.edu.unju.pv2024.model.ObraSocial;
 import ar.edu.unju.pv2024.model.Paciente;
+import ar.edu.unju.pv2024.repository.ObraSocialRepository;
+import ar.edu.unju.pv2024.repository.PacienteRepository;
 
 @Service
 public class PacienteService {
-	private static List<ObraSocial> obrasSociales;
-	private static List<Paciente> pacientes;
-
-	static {
-		ObraSocial obraSocial1 = new ObraSocial(1, "ISJ");
-		ObraSocial obraSocial2 = new ObraSocial(2, "OSDE");
-		ObraSocial obraSocial3 = new ObraSocial(3, "MEDIFE");
-		obrasSociales = new ArrayList<>();
-		obrasSociales.add(obraSocial1);
-		obrasSociales.add(obraSocial2);
-		obrasSociales.add(obraSocial3);
-		Paciente paciente1 = new Paciente(1000, "JUANA RAMOS", LocalDate.now(), obraSocial1);
-		Paciente paciente2 = new Paciente(1001, "DALMIRA MAMANI", LocalDate.now(), obraSocial2);
-		Paciente paciente3 = new Paciente(1002, "SANTOS TREJO", LocalDate.now(), obraSocial1);
-		Paciente paciente4 = new Paciente(1003, "DARIO RAMOS", LocalDate.now(), obraSocial2);
-		Paciente paciente5 = new Paciente(1004, "DIEGO LAMAS", LocalDate.now(), obraSocial1);
-		pacientes = new ArrayList<>();
-		pacientes.add(paciente1);
-		pacientes.add(paciente2);
-		pacientes.add(paciente3);
-		pacientes.add(paciente4);
-		pacientes.add(paciente5);
-	}
-	
+	@Autowired
+	private PacienteRepository pacienteRepository;
+	@Autowired
+	private ObraSocialRepository obraSocialRepository;
 
 	public List<PacienteDto> getPacientes() {
-		List<PacienteDto> pacientesDto = new ArrayList<>(); 
+		List<PacienteDto> pacientesDto = new ArrayList<>();
+		List<Paciente> pacientes = pacienteRepository.findAll();
 		SimpleDateFormat smf = new SimpleDateFormat("dd/MM/yyyy");
 		for (Paciente paciente : pacientes) {
-			Date fechaNacimiento = Date.from(paciente.getFechaNacimiento().atStartOfDay(ZoneId.systemDefault()).toInstant());
+			Date fechaNacimiento = Date
+					.from(paciente.getFechaNacimiento().atStartOfDay(ZoneId.systemDefault()).toInstant());
 			String fechaString = smf.format(fechaNacimiento);
-			PacienteDto pacienteDto = new PacienteDto(paciente.getNumeroDocumento(), paciente.getNombre(), fechaString ,paciente.getObraSocial().getId(), paciente.getObraSocial().getNombre());
+			PacienteDto pacienteDto = new PacienteDto(paciente.getNumeroDocumento(), paciente.getNombre(), fechaString,
+					paciente.getObraSocial().getId(), paciente.getObraSocial().getNombre());
 			pacientesDto.add(pacienteDto);
 		}
 		return pacientesDto;
@@ -56,6 +43,7 @@ public class PacienteService {
 
 	public List<ObraSocialDto> getObrasSociales() {
 		List<ObraSocialDto> obrasSocialesDto = new ArrayList<>();
+		List<ObraSocial> obrasSociales = obraSocialRepository.findAll();
 		for (ObraSocial obraSocial : obrasSociales) {
 			ObraSocialDto obraSocialDto = new ObraSocialDto(obraSocial.getId(), obraSocial.getNombre());
 			obrasSocialesDto.add(obraSocialDto);
@@ -69,46 +57,33 @@ public class PacienteService {
 			Date fechaNacimientoDate = smf.parse(pacienteDto.getFechaNacimiento());
 			ObraSocial obraSocial = getObraSocialBy(pacienteDto.getIdObraSocial());
 			LocalDate fechaNacimiento = fechaNacimientoDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			Paciente paciente = new Paciente(pacienteDto.getNumeroDocumento(), pacienteDto.getNombre(), fechaNacimiento, obraSocial);
-			pacientes.add(paciente);
-			
-//			Integer indice = getIndexFor(paciente);
-//			if (indice != null) {
-//				pacientes.set(indice, paciente);
-//			} else {
-//				pacientes.add(paciente);
-//			}		
+			Paciente paciente;
+			Optional<Paciente> opcional = pacienteRepository.findById(pacienteDto.getNumeroDocumento());
+			if(opcional.isEmpty()) {
+				paciente = new Paciente();
+				paciente.setNumeroDocumento(pacienteDto.getNumeroDocumento());
+			} else {
+				paciente = opcional.get();
+			}
+			paciente.setNombre(pacienteDto.getNombre());
+			paciente.setFechaNacimiento(fechaNacimiento);
+			paciente.setObraSocial(obraSocial);
+			pacienteRepository.save(paciente);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public ObraSocial getObraSocialBy(Integer id) {
-		for (ObraSocial obraSocial : obrasSociales) {
-			if (obraSocial.getId().equals(id)) {
-				return obraSocial;
-			}
-		}
-		return null;
-	}
-	
-	public Integer getIndexFor(Paciente paciente) {
-		for (int i = 0; i < pacientes.size(); ++i) {
-			if (pacientes.get(i).getNumeroDocumento().equals(paciente.getNumeroDocumento())){
-				return i;
-			}
-		}
-		return null;
+		return obraSocialRepository.findById(id).get();		
 	}
 
 	public boolean existe(PacienteDto pacienteBuscar) {
-		for(Paciente paciente : pacientes){
-			if (paciente.getNumeroDocumento().equals(pacienteBuscar.getNumeroDocumento())) {
-				return true;
-			}
+		if (pacienteRepository.findById(pacienteBuscar.getNumeroDocumento()).isPresent()) {
+			return true;
 		}
-	    return false;
+		return false;		
 	}
 }
