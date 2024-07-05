@@ -1,12 +1,16 @@
 package ar.edu.unju.pv2024.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -26,8 +30,10 @@ public class Paciente {
 	private String nombre;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fechaNacimiento;
-	//@Autowired
 	@ManyToOne
 	@JoinColumn(name = "obra_social_id", nullable = false)
 	private ObraSocial obraSocial;
+	@ManyToMany(cascade =  CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<Medico> medicosAtencion;
+	
 }

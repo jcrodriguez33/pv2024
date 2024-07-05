@@ -15,15 +15,11 @@
 	<div class="alert alert-primary" role="alert" th:text="${success}" th:if="${success}"></div> 
 		<div class="row">
 			<!-- CARDS -->
-			<div th:each="paciente:${pacientes}" class="col-3">
+			<div th:each="medico:${medicos}" class="col-3">
 				<div class="card" style="width: 18rem;">
 					<div class="card-body">
-						<h5 th:text="${paciente.nombre}" class="card-title"></h5>
-						<p th:text="${'DNI: ' + paciente.numeroDocumento}" class="card-text"></p>
-						<p th:text="${paciente.obraSocial}" class="card-text"></p>
-						<p th:text="${paciente.fechaNacimiento}" class="card-text"></p>
-						<a th:href="@{/pacientes/editar?numeroDocumento={numeroDocumento}(numeroDocumento=${paciente.numeroDocumento})}" class="btn btn-primary">Editar</a>
-						<a th:href="@{/pacientes/verMedicos?numeroDocumento={numeroDocumento}(numeroDocumento=${paciente.numeroDocumento})}" class="btn btn-primary">Ver Medicos</a>
+						<h5 th:text="${medico.nombre}" class="card-title"></h5>
+						<a th:href="@{/medicos/verPacientes?idMedico={idMedico}(idMedico=${medico.id})}" class="btn btn-primary">Ver Pacientes</a>
 					</div>
 				</div>
 			</div>

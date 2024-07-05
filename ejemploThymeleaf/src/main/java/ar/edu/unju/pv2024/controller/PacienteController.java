@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import ar.edu.unju.pv2024.dto.MedicoDto;
 import ar.edu.unju.pv2024.dto.ObraSocialDto;
 import ar.edu.unju.pv2024.dto.PacienteDto;
 import ar.edu.unju.pv2024.service.PacienteService;
@@ -81,4 +82,24 @@ public class PacienteController {
 		return modelAndView;
 	}
 
+	@GetMapping("/verMedicos")
+	public String verMedicos(@RequestParam(name = "numeroDocumento") Integer numeroDocumento, Model model) {		
+		List<PacienteDto> pacientes = pacienteService.getPacientes();
+		Optional<PacienteDto> paciente = pacientes.stream()
+				.filter(paciente1 -> paciente1.getNumeroDocumento().equals(numeroDocumento)).findFirst();		
+		List<MedicoDto> medicosPaciente = pacienteService.getMedicosAtencionBy(numeroDocumento);
+		List<MedicoDto> medicos = pacienteService.getMedicosAtencion();
+		model.addAttribute("medicosPaciente", medicosPaciente);
+		model.addAttribute("medicos", medicos);
+		model.addAttribute("paciente", paciente.get());
+		return "medicosPacienteList";
+	}
+	
+	@PostMapping("/agregarMedico")
+	public String guardarMedicos(@ModelAttribute("idMedico") Integer idMedico, @ModelAttribute("numeroDocumento") Integer numeroDocumento,	RedirectAttributes redirectAttributes, Model model) {
+		pacienteService.agregarMedicoFor(numeroDocumento, idMedico);
+		List<MedicoDto> medicos = pacienteService.getMedicosAtencion();
+		model.addAttribute("medicos", medicos);		
+		return "redirect:/pacientes/verMedicos?numeroDocumento= " + numeroDocumento;
+	}
 }
